@@ -11,7 +11,7 @@ export interface Video {
 }
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
-const CHANNEL_ID = 'UCYTjNDSbrdhAV2QkE2W-UTA';
+export const CHANNEL_ID = 'UCYTjNDSbrdhAV2QkE2W-UTA';
 
 export async function fetchVideos(query: string = ''): Promise<Video[]> {
   if (!API_KEY || API_KEY === 'MY_YOUTUBE_API_KEY' || API_KEY.trim() === '') {
@@ -20,8 +20,11 @@ export async function fetchVideos(query: string = ''): Promise<Video[]> {
   }
 
   try {
+    // Add timestamp for cache busting to ensure we always get fresh data
+    const timestamp = Date.now();
     const searchResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=15&order=date&type=video&q=${query}&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=50&order=date&type=video&q=${query}&key=${API_KEY}&t=${timestamp}`,
+      { cache: 'no-store' }
     );
     const searchData = await searchResponse.json();
 
@@ -31,9 +34,10 @@ export async function fetchVideos(query: string = ''): Promise<Video[]> {
 
     const videoIds = searchData.items.map((item: any) => item.id.videoId).join(',');
     
-    // Fetch video details to get duration
+    // Fetch video details with cache busting
     const detailsResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_KEY}&t=${timestamp}`,
+      { cache: 'no-store' }
     );
     const detailsData = await detailsResponse.json();
     
@@ -46,9 +50,9 @@ export async function fetchVideos(query: string = ''): Promise<Video[]> {
     return searchData.items
       .map((item: any) => ({
         id: item.id.videoId,
-        title: item.snippet.title,
+        title: decodeHTMLEntities(item.snippet.title),
         thumbnail: item.snippet.thumbnails.high.url,
-        description: item.snippet.description,
+        description: decodeHTMLEntities(item.snippet.description),
         publishedAt: item.snippet.publishedAt,
         duration: durationMap[item.id.videoId] || 0
       }))
@@ -57,6 +61,18 @@ export async function fetchVideos(query: string = ''): Promise<Video[]> {
     console.error('Error fetching videos:', error);
     return getMockVideos();
   }
+}
+
+function decodeHTMLEntities(text: string): string {
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&apos;': "'"
+  };
+  return text.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&apos;/g, (match) => entities[match]);
 }
 
 function parseDuration(duration: string): number {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Sparkles, Youtube, Instagram, Mail, LayoutGrid, Compass, Globe, Heart as HeartIcon } from 'lucide-react';
-import { fetchVideos, type Video } from '@/src/lib/youtube';
+import { fetchVideos, type Video, CHANNEL_ID } from '@/src/lib/youtube';
 import { cn } from '@/src/lib/utils';
 import VideoCard from './components/video/VideoCard';
 import VideoPlayer from './components/video/VideoPlayer';
@@ -182,7 +182,17 @@ export default function App() {
           </div>
         </nav>
 
-        <div className="p-8 mt-auto">
+        <div className="p-8 mt-auto flex flex-col gap-4">
+          <a 
+            href={`https://www.youtube.com/channel/${CHANNEL_ID}?sub_confirmation=1`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-[#FF0000] hover:bg-[#CC0000] text-white rounded-2xl font-bold transition-all shadow-lg shadow-red-500/20 active:scale-[0.98]"
+          >
+            <Youtube className="w-5 h-5 fill-current" />
+            <span className="text-sm">Subscribe on YouTube</span>
+          </a>
+
           <div className="bg-brand-parchment p-4 rounded-2xl border border-brand-line">
             <p className="text-[11px] leading-relaxed text-slate-500 italic">
               "Yoga is not just a workout, it's about working on yourself."
@@ -365,6 +375,15 @@ export default function App() {
         <footer className="mt-20 py-12 border-t border-brand-line flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-brand-subtle uppercase tracking-[0.2em] font-bold">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <p>© 2026 Yoga with Amit. All Rights Reserved.</p>
+            <a 
+              href={`https://www.youtube.com/channel/${CHANNEL_ID}?sub_confirmation=1`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-[#FF0000] text-white rounded-full hover:bg-[#CC0000] transition-all transform hover:scale-105 active:scale-95 shadow-md shadow-red-500/20"
+            >
+              <Youtube className="w-3 h-3 fill-current" />
+              <span className="text-[9px] tracking-widest">Subscribe</span>
+            </a>
             <div className="flex items-center gap-4 border-l border-brand-line pl-6 hidden md:flex">
               <a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-brand-ink transition-colors">
                 <Youtube className="w-4 h-4" />

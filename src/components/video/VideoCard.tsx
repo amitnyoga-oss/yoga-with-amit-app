@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Play, Heart } from 'lucide-react';
+import { Play, Heart, ExternalLink } from 'lucide-react';
 import type { Video } from '@/src/lib/youtube';
 import { cn } from '@/src/lib/utils';
 
@@ -16,7 +16,7 @@ export default function VideoCard({ video, isFavorite, onToggleFavorite, onClick
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
-      className="group cursor-pointer bg-white p-3 rounded-[24px] overflow-hidden border border-brand-line hover:shadow-lg transition-all duration-300 relative"
+      className="group cursor-pointer bg-white p-3 rounded-[24px] overflow-hidden border border-brand-line hover:shadow-lg transition-all duration-300 relative flex flex-col h-full"
       onClick={() => onClick(video)}
     >
       <div className="relative aspect-video rounded-2xl overflow-hidden mb-4">
@@ -42,17 +42,30 @@ export default function VideoCard({ video, isFavorite, onToggleFavorite, onClick
           />
         </button>
       </div>
-      <div className="px-2 pb-2">
+      <div className="px-2 pb-2 flex-1 flex flex-col">
         <h3 className="font-semibold text-sm text-brand-olive leading-snug mb-2 line-clamp-2">
           {video.title}
         </h3>
-        <p className="text-[10px] text-brand-subtle uppercase tracking-wider font-bold">
+        <p className="text-[10px] text-brand-subtle uppercase tracking-wider font-bold mb-4">
           {new Date(video.publishedAt).toLocaleDateString(undefined, {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
           })}
         </p>
+        
+        <div className="mt-auto pt-2 border-t border-brand-line/50">
+          <a 
+            href={`https://www.youtube.com/watch?v=${video.id}`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1.5 text-[10px] text-brand-olive hover:text-brand-orange font-bold uppercase tracking-tight transition-colors group/link"
+          >
+            <span>View on YouTube to Comment</span>
+            <ExternalLink className="w-3 h-3 opacity-50 group-hover/link:opacity-100 transition-opacity" />
+          </a>
+        </div>
       </div>
     </motion.div>
   );
