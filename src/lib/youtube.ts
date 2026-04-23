@@ -7,6 +7,7 @@ export interface Video {
   thumbnail: string;
   description: string;
   publishedAt: string;
+  duration?: number;
 }
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
@@ -19,26 +20,52 @@ export async function fetchVideos(query: string = ''): Promise<Video[]> {
   }
 
   try {
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=12&order=date&type=video&q=${query}&key=${API_KEY}`
+    const searchResponse = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=15&order=date&type=video&q=${query}&key=${API_KEY}`
     );
-    const data = await response.json();
+    const searchData = await searchResponse.json();
 
-    if (data.error) {
-      throw new Error(data.error.message);
+    if (searchData.error) {
+      throw new Error(searchData.error.message);
     }
 
-    return data.items.map((item: any) => ({
-      id: item.id.videoId,
-      title: item.snippet.title,
-      thumbnail: item.snippet.thumbnails.high.url,
-      description: item.snippet.description,
-      publishedAt: item.snippet.publishedAt,
-    }));
+    const videoIds = searchData.items.map((item: any) => item.id.videoId).join(',');
+    
+    // Fetch video details to get duration
+    const detailsResponse = await fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_KEY}`
+    );
+    const detailsData = await detailsResponse.json();
+    
+    // Create a map of durations
+    const durationMap: Record<string, number> = {};
+    detailsData.items.forEach((item: any) => {
+      durationMap[item.id] = parseDuration(item.contentDetails.duration);
+    });
+
+    return searchData.items
+      .map((item: any) => ({
+        id: item.id.videoId,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails.high.url,
+        description: item.snippet.description,
+        publishedAt: item.snippet.publishedAt,
+        duration: durationMap[item.id.videoId] || 0
+      }))
+      .filter((video: any) => video.duration > 60); // Filter out Shorts (<= 60s)
   } catch (error) {
     console.error('Error fetching videos:', error);
     return getMockVideos();
   }
+}
+
+function parseDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const hours = parseInt(match[1] || '0');
+  const minutes = parseInt(match[2] || '0');
+  const seconds = parseInt(match[3] || '0');
+  return hours * 3600 + minutes * 60 + seconds;
 }
 
 function getMockVideos(): Video[] {

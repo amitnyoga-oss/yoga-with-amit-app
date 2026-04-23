@@ -52,7 +52,6 @@ export default function App() {
   const [email, setEmail] = useState('');
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isPlayingFeatured, setIsPlayingFeatured] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -250,83 +249,6 @@ export default function App() {
               exit={{ opacity: 0, x: 10 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Featured Video / Hero Box */}
-              <section className="relative w-full aspect-video max-h-[380px] bg-brand-ink rounded-[32px] overflow-hidden shadow-2xl mb-10 group">
-                <AnimatePresence mode="wait">
-                  {!isPlayingFeatured ? (
-                    <motion.div
-                      key="thumbnail"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="relative w-full h-full"
-                    >
-                      <img 
-                        src="https://i.ytimg.com/vi/JSr45lcM604/maxresdefault.jpg" 
-                        alt="Yoga for Gas"
-                        className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent"></div>
-                      
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <motion.div 
-                          whileHover={{ scale: 1.1 }}
-                          className="w-24 h-24 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:bg-white/30 transition-all shadow-2xl"
-                          onClick={() => setIsPlayingFeatured(true)}
-                        >
-                          <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-white border-b-[12px] border-b-transparent ml-2" />
-                        </motion.div>
-                      </div>
-
-                      <div className="absolute bottom-10 left-10 right-10">
-                        <div className="flex items-end justify-between">
-                          <div className="max-w-2xl">
-                            <span className="text-brand-orange font-bold text-xs uppercase tracking-[0.3em] mb-4 block">Recommended Routine</span>
-                            <h2 className="text-white text-4xl md:text-5xl font-serif italic mb-2 leading-tight">
-                              Featured: Yoga for Gas & Bloating Relief
-                            </h2>
-                            <p className="text-white/60 text-base font-light italic line-clamp-1">
-                              Relieve persistent bloating and gas with these gentle, effective yoga poses designed for digestive health.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="w-full h-1 bg-white/10 mt-10 rounded-full overflow-hidden">
-                          <motion.div 
-                            key="featured-video-gas"
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{ duration: 1.5, delay: 0.5 }}
-                            className="h-full bg-brand-orange shadow-[0_0_15px_rgba(242,125,38,0.5)]" 
-                          />
-                        </div>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="player"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="w-full h-full"
-                    >
-                      <iframe
-                        src="https://www.youtube.com/embed/JSr45lcM604?autoplay=1"
-                        title="Featured: Yoga for Gas & Bloating Relief"
-                        className="w-full h-full border-none"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      ></iframe>
-                      <button 
-                        onClick={() => setIsPlayingFeatured(false)}
-                        className="absolute top-6 right-6 z-10 px-4 py-2 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full text-white text-[10px] font-bold uppercase tracking-widest transition-colors border border-white/20"
-                      >
-                        Close Player
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </section>
-
               {/* Content Section */}
               <div className="mb-8">
                 <div className="flex justify-between items-end mb-6">
