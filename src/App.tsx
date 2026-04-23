@@ -252,8 +252,8 @@ export default function App() {
               {/* Featured Video / Hero Box */}
               <section className="relative w-full aspect-video max-h-[380px] bg-brand-ink rounded-[32px] overflow-hidden shadow-2xl mb-10 group">
                 <img 
-                  src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=2000" 
-                  alt="Tranquil meditation"
+                  src="https://i.ytimg.com/vi/JSr45lcM604/maxresdefault.jpg" 
+                  alt="Yoga for Gas"
                   className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent"></div>
@@ -262,7 +262,13 @@ export default function App() {
                   <motion.div 
                     whileHover={{ scale: 1.1 }}
                     className="w-24 h-24 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:bg-white/30 transition-all shadow-2xl"
-                    onClick={() => setSelectedVideo(videos[0] || null)}
+                    onClick={() => setSelectedVideo({
+                      id: 'JSr45lcM604',
+                      title: 'Yoga for Gas & Bloating Relief',
+                      thumbnail: 'https://i.ytimg.com/vi/JSr45lcM604/maxresdefault.jpg',
+                      description: 'A specialized routine to help relieve gas, bloating, and improve digestion naturally.',
+                      publishedAt: new Date().toISOString()
+                    })}
                   >
                     <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-white border-b-[12px] border-b-transparent ml-2" />
                   </motion.div>
@@ -272,14 +278,19 @@ export default function App() {
                   <div className="flex items-end justify-between">
                     <div className="max-w-2xl">
                       <span className="text-brand-orange font-bold text-xs uppercase tracking-[0.3em] mb-4 block">Recommended Routine</span>
-                      <h2 className="text-white text-4xl md:text-5xl font-serif italic mb-2 leading-tight">Featured: Full Body Energy Flow</h2>
-                      <p className="text-white/60 text-base font-light italic">Start your day with gentle movement and mindful breathing.</p>
+                      <h2 className="text-white text-4xl md:text-5xl font-serif italic mb-2 leading-tight">
+                        Featured: Yoga for Gas & Bloating Relief
+                      </h2>
+                      <p className="text-white/60 text-base font-light italic line-clamp-1">
+                        Relieve persistent bloating and gas with these gentle, effective yoga poses designed for digestive health.
+                      </p>
                     </div>
                   </div>
                   <div className="w-full h-1 bg-white/10 mt-10 rounded-full overflow-hidden">
                     <motion.div 
+                      key="featured-video-gas"
                       initial={{ width: 0 }}
-                      animate={{ width: "65%" }}
+                      animate={{ width: "100%" }}
                       transition={{ duration: 1.5, delay: 0.5 }}
                       className="h-full bg-brand-orange shadow-[0_0_15px_rgba(242,125,38,0.5)]" 
                     />

@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import OriginalReactPlayer from 'react-player';
-const ReactPlayer = OriginalReactPlayer as any;
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Share2, Heart } from 'lucide-react';
 import type { Video } from '@/src/lib/youtube';
@@ -43,13 +41,13 @@ export default function VideoPlayer({ video, onClose }: VideoPlayerProps) {
           </button>
 
           <div className="aspect-video w-full bg-brand-ink">
-            <ReactPlayer
-              url={`https://www.youtube.com/watch?v=${video.id}`}
-              width="100%"
-              height="100%"
-              controls
-              playing
-            />
+            <iframe
+              src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+              title={video.title}
+              className="w-full h-full border-none"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
           </div>
 
           <div className="p-10">
